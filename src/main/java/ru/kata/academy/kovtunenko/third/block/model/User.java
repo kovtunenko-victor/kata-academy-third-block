@@ -1,31 +1,41 @@
 package ru.kata.academy.kovtunenko.third.block.model;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+    @Column(name = "login", unique = true)
+    private String login;
+    @Column(name = "password")
+    private String password;
     @Column(name = "name")
     private String name;
     @Column(name = "title")
     private String title;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Role> roles;
 
     public User() {
-
-    }
-
-    public User(String name, String title) {
-        this.name = name;
-        this.title = title;
+        this.roles = new HashSet<>();
     }
 
     public Long getId() {
@@ -34,6 +44,22 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getName() {
@@ -52,47 +78,67 @@ public class User {
         this.title = title;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public String getRolesStr() {
+        return roles.stream()
+                .map(Role::toString)
+                .reduce("", (s, s2) -> s.length() == 0 ? s + s2 : s + ", " + s2);
+    }
+
+    @Override
+    public String getUsername() {
+        return getLogin();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
+    }
+
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
+        if (o instanceof User) {
+            User p = (User) o;
+            return Objects.equals(this, p);
         }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        User user = (User) o;
-
-        if (!id.equals(user.id)) {
-            return false;
-        }
-
-        if (!name.equals(user.name)) {
-            return false;
-        }
-
-        return title.equals(user.title);
+        return false;
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + title.hashCode();
-        return result;
+        return Objects.hash(id, name, title, getLogin());
     }
 
     @Override
     public String toString() {
-        return String.format("User: Id = %s; Name = %s; Title = %s", id, name, title);
-    }
-
-    public static User getEmptyUser() {
-        return new EmptyUser();
-    }
-
-    private static class EmptyUser extends User {
-
+        return String.format("User: Id = %s; Login = %s; Name = %s; Title = %s", id, getLogin(), name, title);
     }
 }

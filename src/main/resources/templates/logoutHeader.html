@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="header">
+    <div>
+        <a th:if="${userName == 'anonymous'}" href="/login">Login</a>
+        <form th:unless="${userName == 'anonymous'}" th:method="POST" th:action="@{/logout}">
+            Hello user <label th:text="${userName}">user</label>! <input type="submit" value="Logout" class="link-button"/>
+        </form>
+    </div>
+    <br/>
+</div>
+</body>
+</html>

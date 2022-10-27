@@ -5,11 +5,21 @@
     <meta charset="UTF-8">
     <title></title>
 </head>
+<style>
+    .link-button {
+        background: none;
+        border: none;
+        color: #1a0dab;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+</style>
 <body>
 <div>
-    <th:block th:each="msg : ${messages}">
-        <h1 th:text="${msg}"></h1>
-    </th:block>
+    <h3>Hello! Welcome to this server.</h3>
+    <div th:insert="~{logoutHeader :: header}"></div>
+    <a href="/admin/users">User editor</a>
+    <a href="/user/details">User details</a>
 </div>
 </body>
 </html>

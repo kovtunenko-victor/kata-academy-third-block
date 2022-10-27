@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Edit User</title>
 </head>
 <style>
 input:read-only {
@@ -10,11 +10,15 @@ input:read-only {
 }
 </style>
 <body>
-  <form th:method="${method}" th:action="@{/users/update/{id}(id=${user.id})}" th:object="${user}">
+  <form th:method="PATCH" th:action="@{/admin/users/update/{id}(id=${user.id})}" th:object="${user}">
     <table>
       <tr>
         <td><label for="id">User id: </label></td>
         <td><input type="text" th:field="*{id}" id="id" readonly/></td>
+      </tr>
+      <tr>
+        <td><label for="login_readonly">User login: </label></td>
+        <td><input type="text" th:field="*{login}" id="login_readonly" readonly/></td>
       </tr>
       <tr>
         <td><label for="name">Enter name: </label></td>
@@ -24,8 +28,24 @@ input:read-only {
         <td> <label for="title">Enter title: </label></td>
         <td><input type="text" th:field="*{title}" id="title"/></td>
       </tr>
+      <tr>
+        <td> <label for="roles">Enter roles: </label></td>
+        <td>
+          <select id="roles" th:field="*{roles}" multiple="multiple">
+            <option th:each="role : ${allRoles}"
+                    th:value="${role.id}"
+                    th:text="${role.name}">
+              Roles
+            </option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td><label for="password">Enter password: </label></td>
+        <td><input type="password" th:field="*{password}" id="password"/></td>
+      </tr>
     </table>
-    <input type="submit" value="Edit User" th:value="${btnValue}"/>
+    <input type="submit" value="Edit User"/>
   </form>
 </body>
 </html>

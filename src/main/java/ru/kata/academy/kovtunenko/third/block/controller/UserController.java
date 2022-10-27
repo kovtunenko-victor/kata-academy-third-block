@@ -1,6 +1,6 @@
 package ru.kata.academy.kovtunenko.third.block.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,50 +10,66 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.kata.academy.kovtunenko.third.block.model.User;
+import ru.kata.academy.kovtunenko.third.block.service.RoleService;
 import ru.kata.academy.kovtunenko.third.block.service.UserService;
+
+import javax.servlet.ServletRequest;
+import java.security.Principal;
 
 @Controller
 public class UserController {
-    @Autowired
-    UserService service;
 
-    @GetMapping(value = "/users")
-    public String printUser(ModelMap model) {
-        model.addAttribute("users", service.get());
+    private final UserService userService;
+    private final RoleService roleService;
+
+    public UserController(UserService service, RoleService roleService) {
+        this.userService = service;
+        this.roleService = roleService;
+    }
+
+    @GetMapping("/user/details")
+    public String showUser(ModelMap model, Principal principal) {
+        model.addAttribute("userName", principal.getName());
+        model.addAttribute("user", (User)userService.loadUserByUsername(principal.getName()));
+        return "userDetails";
+    }
+
+    @GetMapping(value = "/admin/users")
+    public String printUser(ModelMap model, Principal principal) {
+        model.addAttribute("userName", principal.getName());
+        model.addAttribute("users", userService.get());
         return "users";
     }
 
-    @GetMapping("/users/edit/{id}")
+    @GetMapping("/admin/users/edit/{id}")
     public String editUser(@PathVariable("id") Long id, ModelMap model) {
-        model.addAttribute("user", service.getById(id));
-        model.addAttribute("method", "PATCH");
-        model.addAttribute("btnValue", "Edit User");
+        model.addAttribute("user", userService.getById(id));
+        model.addAttribute("allRoles", roleService.get());
         return "edit";
     }
 
-    @GetMapping("/users/create")
+    @GetMapping("/admin/users/create")
     public String editUser(ModelMap model) {
-        model.addAttribute("user", User.getEmptyUser());
-        model.addAttribute("method", "POST");
-        model.addAttribute("btnValue", "Create User");
-        return "edit";
+        model.addAttribute("user", new User());
+        model.addAttribute("allRoles", roleService.get());
+        return "create";
     }
 
-    @PostMapping("/users/update")
-    public String createUser(@ModelAttribute("user") User user) {
-        service.save(user);
-        return "redirect:/users";
+    @PostMapping("/admin/users/update")
+    public String createUser(@ModelAttribute("user") User user, BCryptPasswordEncoder encoder, ServletRequest request) {
+        userService.save(user);
+        return "redirect:/admin/users";
     }
 
-    @PatchMapping("/users/update/{id}")
-    public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") Long id) {
-        service.update(id, user);
-        return "redirect:/users";
+    @PatchMapping("/admin/users/update/{id}")
+    public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") Long id, BCryptPasswordEncoder encoder) {
+        userService.update(id, user);
+        return "redirect:/admin/users";
     }
 
-    @DeleteMapping(value = "/users/delete/{id}")
-    public String deleteUser(@PathVariable(value = "id", required = true) Long id) {
-        service.deleteById(id);
-        return "redirect:/users";
+    @DeleteMapping(value = "/admin/users/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long id) {
+        userService.deleteById(id);
+        return "redirect:/admin/users";
     }
 }

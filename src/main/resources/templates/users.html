@@ -5,59 +5,77 @@
     <title>Show users</title>
 </head>
 <style>
-.table {
-	width: 50%;
-	margin-bottom: 20px;
-	border: 1px solid #dddddd;
-	border-collapse: collapse;
-}
-.table th {
-	font-weight: bold;
-	padding: 5px;
-	background: #efefef;
-	border: 1px solid #dddddd;
-}
-.table td {
-	border: 1px solid #dddddd;
-	padding: 5px;
-}
+    .table {
+        width: 50%;
+        margin-bottom: 20px;
+        border: 1px solid #dddddd;
+        border-collapse: collapse;
+    }
 
-a:link {
-  color: red;
-}
-a:visited {
-  color: green;
-}
-a:hover {
-  color: hotpink;
-}
-a:active {
-  color: blue;
-}
+    .table th {
+        font-weight: bold;
+        padding: 5px;
+        background: #efefef;
+        border: 1px solid #dddddd;
+    }
+
+    .table td {
+        border: 1px solid #dddddd;
+        padding: 5px;
+    }
+
+    a:link {
+        color: red;
+    }
+
+    a:visited {
+        color: green;
+    }
+
+    a:hover {
+        color: hotpink;
+    }
+
+    a:active {
+        color: blue;
+    }
+
+    .link-button {
+        background: none;
+        border: none;
+        color: #1a0dab;
+        text-decoration: underline;
+        cursor: pointer;
+    }
 </style>
 <body>
+<div th:insert="~{logoutHeader :: header}"></div>
 <div>
     <table class="table">
         <thead>
         <tr>
             <th>Id</th>
+            <th>Login</th>
             <th>Name</th>
             <th>Title</th>
-            <th style = "width: 35px">Actions</th>
+            <th>Roles</th>
+            <th style="width: 35px">Actions</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="user : ${users}">
             <td><span th:text="${user.id}"> Id </span></td>
+            <td><span th:text="${user.login}"> Login </span></td>
             <td><span th:text="${user.name}"> Name </span></td>
             <td><span th:text="${user.title}"> Title </span></td>
-            <td style = "width: 25px">
+            <td><span th:text="${user.getRolesStr()}"> Roles </span></td>
+            <td style="width: 25px">
                 <div style="display: flex; justify-content: space-around">
-                    <form th:method="GET" th:action="@{/users/edit/{id}(id=${user.id})}">
+                    <form th:method="GET" th:action="@{/admin/users/edit/{id}(id=${user.id})}">
                         <input type="submit" value="Edit User"/>
                     </form>
                     &nbsp
-                    <form th:method="DELETE" th:action="@{/users/delete/{id}(id=${user.id})}">
+                    <form th:method="DELETE" th:action="@{/admin/users/delete/{id}(id=${user.id})}">
                         <input type="submit" value="Delete User"/>
                     </form>
                 </div>
@@ -65,7 +83,7 @@ a:active {
         </tr>
         </tbody>
     </table>
-    <form th:method="GET" th:action="@{/users/create}">
+    <form th:method="GET" th:action="@{/admin/users/create}">
         <input type="submit" value="Add User"/>
     </form>
 </div>
