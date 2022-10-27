@@ -1,6 +1,5 @@
 package ru.kata.academy.kovtunenko.third.block.controller;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import ru.kata.academy.kovtunenko.third.block.model.User;
 import ru.kata.academy.kovtunenko.third.block.service.RoleService;
 import ru.kata.academy.kovtunenko.third.block.service.UserService;
-
-import javax.servlet.ServletRequest;
 import java.security.Principal;
 
 @Controller
@@ -56,13 +53,13 @@ public class UserController {
     }
 
     @PostMapping("/admin/users/update")
-    public String createUser(@ModelAttribute("user") User user, BCryptPasswordEncoder encoder, ServletRequest request) {
+    public String createUser(@ModelAttribute("user") User user) {
         userService.save(user);
         return "redirect:/admin/users";
     }
 
     @PatchMapping("/admin/users/update/{id}")
-    public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") Long id, BCryptPasswordEncoder encoder) {
+    public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") Long id) {
         userService.update(id, user);
         return "redirect:/admin/users";
     }

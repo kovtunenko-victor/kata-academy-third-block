@@ -11,15 +11,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import ru.kata.academy.kovtunenko.third.block.service.UserServiceImpl;
+import ru.kata.academy.kovtunenko.third.block.service.UserService;
 
 import java.util.Set;
 
 @EnableWebSecurity
 public class SecurityConfig {
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
-    public SecurityConfig(UserServiceImpl userService) {
+    public SecurityConfig(UserService userService) {
         this.userService = userService;
     }
 

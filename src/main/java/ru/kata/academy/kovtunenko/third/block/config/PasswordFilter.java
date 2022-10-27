@@ -26,9 +26,12 @@ public class PasswordFilter extends GenericFilterBean {
 
             if(uri.contains("/admin/users/update/") && (method.equals("POST") || method.equals("PATCH"))) {
                 AddableHttpRequest addableRequest = new AddableHttpRequest(httpRequest);
-                addableRequest.addParameter("password", passwordEncoder.encode(request.getParameter("password")));
-                chain.doFilter(addableRequest, response);
-                return;
+
+                if(request.getParameter("password") != null && request.getParameter("password").length() > 0) {
+                    addableRequest.addParameter("password", passwordEncoder.encode(request.getParameter("password")));
+                    chain.doFilter(addableRequest, response);
+                    return;
+                }
             }
         }
 
