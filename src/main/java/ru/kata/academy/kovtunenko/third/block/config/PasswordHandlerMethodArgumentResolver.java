@@ -17,7 +17,7 @@ public class PasswordHandlerMethodArgumentResolver implements HandlerMethodArgum
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return (parameter.getParameterAnnotation(EncodePassword.class) != null) || (parameter.getParameterType() == User.class) ;
+        return parameter.getParameterAnnotation(EncodePassword.class) != null ;
     }
 
     @Override
