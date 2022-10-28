@@ -10,13 +10,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.kata.academy.kovtunenko.third.block.service.UserService;
 
+import java.util.List;
 import java.util.Set;
 
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer {
     private final UserService userService;
 
     public SecurityConfig(UserService userService) {
@@ -42,7 +44,6 @@ public class SecurityConfig {
                     .logout()
                     .logoutSuccessUrl("/")
                 .and()
-                .addFilterAfter(new PasswordFilter(passwordEncoder()), BasicAuthenticationFilter.class)
                 .build();
     }
 
@@ -68,5 +69,16 @@ public class SecurityConfig {
             response.sendRedirect("/index");
         };
     }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(getPasswordHandlerMethodArgumentResolver());
+    }
+
+    @Bean
+    public PasswordHandlerMethodArgumentResolver getPasswordHandlerMethodArgumentResolver () {
+        return new PasswordHandlerMethodArgumentResolver(passwordEncoder());
+    }
+
 
 }
