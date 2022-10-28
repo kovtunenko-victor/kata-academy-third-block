@@ -6,7 +6,6 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import ru.kata.academy.kovtunenko.third.block.model.User;
 
 public class PasswordHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
     private final PasswordEncoder passwordEncoder;
