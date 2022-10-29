@@ -15,7 +15,8 @@
     }
 </style>
 <body>
-<div th:insert="~{logoutHeader :: header}"></div>
+<div th:insert="~{pageHeader :: header}"></div>
+<div th:insert="~{pageMenu :: menu}"></div>
 <div>
     <table th:object="${user}">
         <tr>

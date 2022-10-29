@@ -28,28 +28,28 @@ public class UserController {
     public String showUser(ModelMap model, Principal principal) {
         model.addAttribute("userName", principal.getName());
         model.addAttribute("user", (User)userService.loadUserByUsername(principal.getName()));
-        return "userDetails";
+        return "user/userDetails";
     }
 
     @GetMapping(value = "/admin/users")
     public String printUser(ModelMap model, Principal principal) {
         model.addAttribute("userName", principal.getName());
         model.addAttribute("users", userService.get());
-        return "users";
+        return "user/users";
     }
 
     @GetMapping("/admin/users/edit/{id}")
     public String editUser(@PathVariable("id") Long id, ModelMap model) {
         model.addAttribute("user", userService.getById(id));
         model.addAttribute("allRoles", roleService.get());
-        return "edit";
+        return "user/edit";
     }
 
     @GetMapping("/admin/users/create")
     public String editUser(ModelMap model) {
         model.addAttribute("user", new User());
         model.addAttribute("allRoles", roleService.get());
-        return "create";
+        return "user/create";
     }
 
     @PostMapping("/admin/users/update")
