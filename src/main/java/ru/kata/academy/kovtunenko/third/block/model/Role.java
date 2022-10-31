@@ -92,7 +92,7 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return String.format("%s", name);
+        return String.format("%s", name.replace("ROLE_", ""));
     }
 }
 

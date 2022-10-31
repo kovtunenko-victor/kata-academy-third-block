@@ -26,16 +26,20 @@ public class UserController {
 
     @GetMapping("/user/details")
     public String showUser(ModelMap model, Principal principal) {
-        model.addAttribute("userName", principal.getName());
+        //model.addAttribute("userName", principal.getName());
         model.addAttribute("user", (User)userService.loadUserByUsername(principal.getName()));
-        return "user/userDetails";
+        //return "user/userDetails";
+        return "new/mainPage";
     }
 
     @GetMapping(value = "/admin/users")
     public String printUser(ModelMap model, Principal principal) {
-        model.addAttribute("userName", principal.getName());
+        //model.addAttribute("userName", principal.getName());
+        model.addAttribute("user", (User)userService.loadUserByUsername(principal.getName()));
         model.addAttribute("users", userService.get());
-        return "user/users";
+        model.addAttribute("allRoles", roleService.get());
+        //return "user/users";
+        return "new/mainPage";
     }
 
     @GetMapping("/admin/users/edit/{id}")
