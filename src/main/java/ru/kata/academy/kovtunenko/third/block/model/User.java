@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -140,5 +141,27 @@ public class User implements UserDetails {
     @Override
     public String toString() {
         return String.format("User: Id = %s; Login = %s; Name = %s; Title = %s", id, getLogin(), name, title);
+    }
+
+    public class Response {
+        public Long getId() {
+            return User.this.getId();
+        }
+
+        public String getLogin() {
+            return User.this.getLogin();
+        }
+
+        public String getName() {
+            return User.this.getName();
+        }
+
+        public String getTitle() {
+            return User.this.getTitle();
+        }
+
+        public Set<Role.Response> getRoles() {
+            return User.this.getRoles().stream().map(Role::toResponse).collect(Collectors.toSet());
+        }
     }
 }

@@ -60,6 +60,10 @@ public class Role implements GrantedAuthority {
         this.users = users;
     }
 
+    public Role.Response toResponse() {
+        return this.new Response();
+    }
+
     @Override
     public String getAuthority() {
         return getName();
@@ -93,6 +97,16 @@ public class Role implements GrantedAuthority {
     @Override
     public String toString() {
         return String.format("%s", name.replace("ROLE_", ""));
+    }
+
+    public class Response {
+        public Long getId() {
+            return Role.this.getId();
+        }
+
+        public String getLogin() {
+            return Role.this.getName();
+        }
     }
 }
 
