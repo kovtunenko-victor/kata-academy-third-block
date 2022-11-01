@@ -1,8 +1,5 @@
 package ru.kata.academy.kovtunenko.third.block.config;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -12,8 +9,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class PasswordFilter extends GenericFilterBean {
     private final PasswordEncoder passwordEncoder;
