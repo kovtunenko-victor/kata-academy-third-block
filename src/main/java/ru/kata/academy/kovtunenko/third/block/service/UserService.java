@@ -8,6 +8,6 @@ public interface UserService extends UserDetailsService {
     List<User> get();
     User getById(Long id);
     void save(User user);
-    void update(Long id, User user);
+    void update(User user);
     void deleteById(Long id);
 }

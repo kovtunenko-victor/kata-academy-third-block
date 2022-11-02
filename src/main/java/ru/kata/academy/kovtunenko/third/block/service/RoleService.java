@@ -6,4 +6,6 @@ import java.util.Set;
 
 public interface RoleService {
     Set<Role> get();
+
+    Role getById(Long id);
 }

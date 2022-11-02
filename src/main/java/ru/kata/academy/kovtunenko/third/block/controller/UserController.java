@@ -4,11 +4,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import ru.kata.academy.kovtunenko.third.block.config.EncodePassword;
+import ru.kata.academy.kovtunenko.third.block.config.ModelAttributeWithEncodePassword;
 import ru.kata.academy.kovtunenko.third.block.model.User;
 import ru.kata.academy.kovtunenko.third.block.service.RoleService;
 import ru.kata.academy.kovtunenko.third.block.service.UserService;
@@ -54,16 +53,14 @@ public class UserController {
     }
 
     @PostMapping("/admin/users/update")
-    public String createUser(@ModelAttribute("user")User user, @EncodePassword String password) {
-        user.setPassword(password);
+    public String createUser(@ModelAttributeWithEncodePassword User user) {
         userService.save(user);
         return "redirect:/admin/users";
     }
 
     @PatchMapping("/admin/users/update/{id}")
-    public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") Long id, @EncodePassword String password) {
-        user.setPassword(password);
-        userService.update(id, user);
+    public String updateUser(@ModelAttributeWithEncodePassword User user) {
+        userService.update(user);
         return "redirect:/admin/users";
     }
 

@@ -12,6 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import ru.kata.academy.kovtunenko.third.block.service.RoleService;
 import ru.kata.academy.kovtunenko.third.block.service.UserService;
 
 import java.util.List;
@@ -20,9 +21,11 @@ import java.util.Set;
 @EnableWebSecurity
 public class SecurityConfig implements WebMvcConfigurer {
     private final UserService userService;
+    private final RoleService roleService;
 
-    public SecurityConfig(UserService userService) {
+    public SecurityConfig(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @Bean
@@ -76,8 +79,8 @@ public class SecurityConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public PasswordHandlerMethodArgumentResolver getPasswordHandlerMethodArgumentResolver () {
-        return new PasswordHandlerMethodArgumentResolver(passwordEncoder());
+    public UserHandlerMethodArgumentResolver getPasswordHandlerMethodArgumentResolver () {
+        return new UserHandlerMethodArgumentResolver(passwordEncoder(), roleService);
     }
 
 
