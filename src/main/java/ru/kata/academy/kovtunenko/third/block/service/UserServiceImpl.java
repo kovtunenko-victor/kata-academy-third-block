@@ -40,11 +40,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public void update(Long id, User user) {
-        user.setId(id);
-
+    public void update(User user) {
         if (user.getPassword() != null && user.getPassword().length() == 0) {
-            user.setPassword(getById(id).getPassword());
+            user.setPassword(getById(user.getId()).getPassword());
         }
 
         userRepository.save(user);
