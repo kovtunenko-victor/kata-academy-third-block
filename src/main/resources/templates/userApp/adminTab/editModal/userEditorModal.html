@@ -20,7 +20,7 @@
              aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form id="editUserForm">
+                    <form th:id="'editUserForm_' + ${user.id}">
                         <div class="modal-header">
                             <h5 class="modal-title" id="myModalLabel">
                                 Edit user
@@ -32,40 +32,40 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-8" style="display: block; margin-left: auto; margin-right: auto">
-                                    <label for="id">User id: </label> <br/>
-                                    <input type="text" id="id" readonly
+                                    <label th:for="'id_edit_' + ${user.id}">User id: </label> <br/>
+                                    <input type="text" th:id="'id_edit_' + ${user.id}" readonly
                                            style='width: 100%; background-color: lightgoldenrodyellow'/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-8" style="display: block; margin-left: auto; margin-right: auto">
-                                    <label for="login">Login: </label> <br/>
-                                    <input type="text" id="login" style='width: 100%'/>
+                                    <label th:for="'login_edit_' + ${user.id}">Login: </label> <br/>
+                                    <input type="text" th:id="'login_edit_' + ${user.id}" style='width: 100%'/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-8" style="display: block; margin-left: auto; margin-right: auto">
-                                    <label for="name">Name: </label><br/>
-                                    <input type="text" id="name" style='width: 100%'/>
+                                    <label th:for="'name_edit_' + ${user.id}">Name: </label><br/>
+                                    <input type="text" th:id="'name_edit_' + ${user.id}" style='width: 100%'/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-8" style="display: block; margin-left: auto; margin-right: auto">
-                                    <label for="title">Title: </label><br/>
-                                    <input type="text" id="title" style='width: 100%'/>
+                                    <label th:for="'title_edit_' + ${user.id}">Title: </label><br/>
+                                    <input type="text" th:id="'title_edit_' + ${user.id}" style='width: 100%'/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-8" style="display: block; margin-left: auto; margin-right: auto">
-                                    <label for="roles">Enter roles: </label> <br/>
-                                    <select class="form-select" id="roles" multiple="multiple"
+                                    <label th:for="'roles_edit_' + ${user.id}">Enter roles: </label> <br/>
+                                    <select class="form-select" th:id="'roles_edit_' + ${user.id}" multiple="multiple"
                                             style='width: 100%'></select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-8" style="display: block; margin-left: auto; margin-right: auto">
-                                    <label for="password">Enter password: </label><br/>
-                                    <input type="password" id="password" style='width: 100%'/>
+                                    <label th:for="'password_edit_' + ${user.id}">Enter password: </label><br/>
+                                    <input type="password" th:id="'password_edit_' + ${user.id}" style='width: 100%'/>
                                 </div>
                             </div>
                         </div>

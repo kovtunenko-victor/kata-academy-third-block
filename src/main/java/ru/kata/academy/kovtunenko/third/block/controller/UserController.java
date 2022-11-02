@@ -29,7 +29,7 @@ public class UserController {
         //model.addAttribute("userName", principal.getName());
         model.addAttribute("user", (User)userService.loadUserByUsername(principal.getName()));
         //return "user/userDetails";
-        return "new/mainPage";
+        return "userApp/mainPage";
     }
 
     @GetMapping(value = "/admin/users")
@@ -39,7 +39,7 @@ public class UserController {
         model.addAttribute("users", userService.get());
         model.addAttribute("allRoles", roleService.get());
         //return "user/users";
-        return "new/mainPage";
+        return "userApp/mainPage";
     }
 
     @GetMapping("/admin/users/edit/{id}")

@@ -17,10 +17,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
-public class PasswordHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
+public class PasswordEncoderHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
     private final PasswordEncoder passwordEncoder;
 
-    public PasswordHandlerMethodArgumentResolver(PasswordEncoder passwordEncoder) {
+    public PasswordEncoderHandlerMethodArgumentResolver(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 

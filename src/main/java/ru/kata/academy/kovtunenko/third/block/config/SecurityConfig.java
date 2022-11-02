@@ -10,7 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -48,8 +47,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                     .logout()
                     .logoutSuccessUrl("/")
                 .and()
-                    .addFilterAfter(new PasswordFilter(passwordEncoder()), BasicAuthenticationFilter.class)
-                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                    .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
                 .build();
     }
@@ -79,12 +77,12 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(getPasswordHandlerMethodArgumentResolver());
+        resolvers.add(getPasswordEncoderHandlerMethodArgumentResolver());
     }
 
     @Bean
-    public PasswordHandlerMethodArgumentResolver getPasswordHandlerMethodArgumentResolver () {
-        return new PasswordHandlerMethodArgumentResolver(passwordEncoder());
+    public PasswordEncoderHandlerMethodArgumentResolver getPasswordEncoderHandlerMethodArgumentResolver () {
+        return new PasswordEncoderHandlerMethodArgumentResolver(passwordEncoder());
     }
 
 }

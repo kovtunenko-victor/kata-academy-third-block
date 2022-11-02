@@ -104,7 +104,7 @@ public class Role implements GrantedAuthority {
             return Role.this.getId();
         }
 
-        public String getLogin() {
+        public String getName() {
             return Role.this.getName();
         }
     }
