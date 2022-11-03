@@ -11,11 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.kata.academy.kovtunenko.third.block.service.UserService;
 
-import java.util.List;
 import java.util.Set;
 
 @EnableWebSecurity
@@ -55,6 +53,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        userService.setPasswordEncoder(passwordEncoder());
         authBuilder.userDetailsService(userService).passwordEncoder(passwordEncoder());
         return authBuilder.build();
     }
@@ -74,15 +73,4 @@ public class SecurityConfig implements WebMvcConfigurer {
             response.sendRedirect("/index");
         };
     }
-
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(getPasswordEncoderHandlerMethodArgumentResolver());
-    }
-
-    @Bean
-    public PasswordEncoderHandlerMethodArgumentResolver getPasswordEncoderHandlerMethodArgumentResolver () {
-        return new PasswordEncoderHandlerMethodArgumentResolver(passwordEncoder());
-    }
-
 }
