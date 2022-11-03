@@ -1,6 +1,7 @@
 package ru.kata.academy.kovtunenko.third.block.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,22 +11,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import ru.kata.academy.kovtunenko.third.block.service.RoleService;
 import ru.kata.academy.kovtunenko.third.block.service.UserService;
 
-import java.util.List;
 import java.util.Set;
 
 @EnableWebSecurity
-public class SecurityConfig implements WebMvcConfigurer {
+public class SecurityConfig {
     private final UserService userService;
-    private final RoleService roleService;
 
-    public SecurityConfig(UserService userService, RoleService roleService) {
+    public SecurityConfig(UserService userService) {
         this.userService = userService;
-        this.roleService = roleService;
     }
 
     @Bean
@@ -53,8 +48,10 @@ public class SecurityConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    @DependsOn({"passwordEncoder", "userServiceImpl"})
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        userService.setPasswordEncoder(passwordEncoder());
         authBuilder.userDetailsService(userService).passwordEncoder(passwordEncoder());
         return authBuilder.build();
     }
@@ -74,16 +71,4 @@ public class SecurityConfig implements WebMvcConfigurer {
             response.sendRedirect("/index");
         };
     }
-
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(getPasswordHandlerMethodArgumentResolver());
-    }
-
-    @Bean
-    public UserHandlerMethodArgumentResolver getPasswordHandlerMethodArgumentResolver () {
-        return new UserHandlerMethodArgumentResolver(passwordEncoder(), roleService);
-    }
-
-
 }
