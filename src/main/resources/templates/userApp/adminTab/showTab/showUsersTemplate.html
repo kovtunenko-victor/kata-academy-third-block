@@ -14,7 +14,7 @@
 <body>
 
 <div class="container">
-  <div th:fragment="showUsers" class="card">
+  <div th:fragment="showUsers" class="card" id="show-users-tab-template">
     <div class="card-header">
       All users
     </div>
@@ -30,27 +30,12 @@
           <th style="width: 35px">Actions</th>
         </tr>
         </thead>
-        <tbody>
-        <tr th:each="user : ${users}">
-          <td><span th:text="${user.id}"> Id </span></td>
-          <td><span th:text="${user.login}"> Login </span></td>
-          <td><span th:text="${user.name}"> Name </span></td>
-          <td><span th:text="${user.title}"> Title </span></td>
-          <td><span th:text="${user.getRolesStr()}"> Roles </span></td>
-          <td style="width: 25px">
-            <div style="display: flex; justify-content: space-around">
-              <div th:insert="~{userApp/adminTab/editModal/userEditorModal :: editUser}"></div>
-              &nbsp
-              <form th:method="DELETE"
-                    th:action="@{/admin/users/delete/{id}(id=${user.id})}">
-                <input type="submit" value="Delete" class="btn btn-danger"/>
-              </form>
-            </div>
-          </td>
-        </tr>
+        <tbody id="tbodyShowUsers">
+
         </tbody>
       </table>
     </div>
+    <div th:insert="~{userApp/adminTab/editModal/userEditorModal :: editUser}"></div>
   </div>
 </div>
 

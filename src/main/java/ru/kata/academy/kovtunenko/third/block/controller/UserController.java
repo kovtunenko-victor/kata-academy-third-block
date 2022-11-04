@@ -26,46 +26,14 @@ public class UserController {
 
     @GetMapping("/user/details")
     public String showUser(ModelMap model, Principal principal) {
-        //model.addAttribute("userName", principal.getName());
         model.addAttribute("user", (User)userService.loadUserByUsername(principal.getName()));
-        //return "user/userDetails";
         return "userApp/mainPage";
     }
 
     @GetMapping(value = "/admin/users")
     public String printUser(ModelMap model, Principal principal) {
-        //model.addAttribute("userName", principal.getName());
         model.addAttribute("user", (User)userService.loadUserByUsername(principal.getName()));
-        model.addAttribute("users", userService.get());
-        model.addAttribute("allRoles", roleService.get());
-        //return "user/users";
         return "userApp/mainPage";
-    }
-
-    @GetMapping("/admin/users/edit/{id}")
-    public String editUser(@PathVariable("id") Long id, ModelMap model) {
-        model.addAttribute("user", userService.getById(id));
-        model.addAttribute("allRoles", roleService.get());
-        return "user/edit";
-    }
-
-    @GetMapping("/admin/users/create")
-    public String editUser(ModelMap model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("allRoles", roleService.get());
-        return "user/create";
-    }
-
-    @PostMapping("/admin/users/update")
-    public String createUser(@ModelAttribute("user") User user) {
-        userService.save(user);
-        return "redirect:/admin/users";
-    }
-
-    @PatchMapping("/admin/users/update/{id}")
-    public String updateUser(@ModelAttribute("user") User user) {
-        userService.update(user);
-        return "redirect:/admin/users";
     }
 
     @DeleteMapping(value = "/admin/users/delete/{id}")

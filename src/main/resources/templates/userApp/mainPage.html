@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,33 +24,134 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 <script>
-    $('#modal-container-edit').on('show.bs.modal', ev => {
+    $('#show-users-tab-template').on('show.bs.modal', ev => {
         let button = $(ev.relatedTarget);
         let id = button.data('id');
+
         showEditModal(id);
     })
 
-    $(async function() {
+    $(async function () {
         await selectUserTab();
-        await newUser();
+        await showAllUser();
     });
 
     async function showEditModal(id) {
-        let form = document.forms["editUserForm"];
-        form.id.value = id;
+        const form = document.forms["editUserForm"];
+
+        getUserById(id).then(user => {
+            form.id.value = user.id;
+            form.login.value = user.login;
+            form.name.value = user.name;
+            form.title.value = user.title;
+
+            $('#roles_edit').empty();
+
+            getAllRoles().then(roles => {
+                roles.forEach(role => {
+                    let selectedRole = false;
+
+                    for (let i = 0; i < user.roles.length; i++) {
+                        if (user.roles[i].name === role.name) {
+                            selectedRole = true;
+                            break;
+                        }
+                    }
+
+                    let optionElement = document.createElement("option");
+                    optionElement.text = role.name.substring(5);
+                    optionElement.value = role.id;
+
+                    if (selectedRole) {
+                        optionElement.selected = true;
+                    }
+
+                    $('#roles_edit')[0].appendChild(optionElement);
+                })
+            });
+
+            form.addEventListener('submit', onSubmitClick);
+
+            function onSubmitClick(e) {
+                e.preventDefault();
+                let userRoles = [];
+
+                if (form.roleSet !== undefined) {
+                    for (let i = 0; i < form.roleSet.options.length; i++) {
+                        if (form.roleSet.options[i].selected) userRoles.push({
+                            id: form.roleSet.options[i].value,
+                            name: form.roleSet.options[i].text
+                        })
+                    }
+                }
+
+                function getCookie(name) {
+                    if (!document.cookie) {
+                        return null;
+                    }
+
+                    const xsrfCookies = document.cookie.split(';')
+                        .map(c => c.trim())
+                        .filter(c => c.startsWith(name + '='));
+
+                    if (xsrfCookies.length === 0) {
+                        return null;
+                    }
+
+                    return decodeURIComponent(xsrfCookies[0].split('=')[1]);
+                }
+
+                fetch("http://localhost:8081/api/users/update/" + user.id, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-XSRF-TOKEN': getCookie('XSRF-TOKEN')
+                    },
+                    body: JSON.stringify({
+                        id: form.id.value,
+                        login: form.login.value,
+                        name: form.name !== undefined ? form.name.value : '',
+                        title: form.title !== undefined ? form.title.value : '',
+                        password: form.password !== undefined ? form.password.value : '',
+                        roles: userRoles
+                    })
+                }).then(() => {
+                    form.reset();
+                    $('#btnCloseEdit').click();
+                    showAllUser();
+                })
+            };
+        });
     }
 
     async function selectUserTab() {
         if (document.getElementById("v-pills-admin-tab") === null) {
-            let linkUser = document.getElementById("v-pills-user-tab");
-            linkUser.setAttribute('class', 'nav-link active');
-
-            let tabUser = document.getElementById("v-pills-user");
-            tabUser.setAttribute('class', 'tab-pane fade show active');
+            $("#v-pills-user-tab").click();
+        } else {
+            $("#v-pills-admin-tab").click();
         }
     }
 
-    async function newUser() {
+    async function getAllRoles() {
+        let response = await fetch("http://localhost:8081/api/roles/get");
+        return response.json();
+    }
+
+    async function getUserById(id) {
+        let response = await fetch("http://localhost:8081/api/users/get/" + id);
+        return response.json().then(user => {
+            return user;
+        });
+    }
+
+    async function getAllUsers() {
+        let response = await fetch("http://localhost:8081/api/users/get");
+        return response.json();
+    }
+
+    async function loadRolesToAddForm() {
+        $('#roles_add').empty();
+
         await fetch("http://localhost:8081/api/roles/get")
             .then(res => res.json())
             .then(roleList => {
@@ -60,6 +162,9 @@
                     $('#roles_add')[0].appendChild(el);
                 })
             });
+    }
+
+    async function addUser() {
         const form = document.forms["createUserForm"];
 
         form.addEventListener('submit', onSubmitClick);
@@ -108,10 +213,40 @@
                 })
             }).then(() => {
                 form.reset();
-                //allUsers();
+                showAllUser();
                 $('#v-pills-table-tab').click();
             })
         }
+    }
+
+    async function showAllUser() {
+        $('#tbodyShowUsers').empty();
+
+        getAllUsers().then(data => {
+            data.forEach(user => {
+                let userData = `$(
+                <tr>
+                  <td>${user.id}</td>
+                  <td>${user.login}</td>
+                  <td>${user.name}</td>
+                  <td>${user.title}</td>
+                  <td>${user.roles.map(role => role.name.substring(5).concat(" ")).toString().replaceAll(",", ", ")}</td>
+                  <td style="width: 25px">
+                    <div style="display: flex; justify-content: space-around">
+                      <a id="modal-edit" data-target="#modal-container-edit" role="button" data-id="${user.id}"
+                         class="btn btn-primary" data-toggle="modal">Edit</a>
+                      &nbsp
+                      <form method="DELETE" action="/admin/users/delete/${user.id}">
+                        <input type="submit" value="Delete" class="btn btn-danger"/>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                )`;
+
+                $('#tbodyShowUsers').append(userData);
+            });
+        });
     }
 
 </script>
