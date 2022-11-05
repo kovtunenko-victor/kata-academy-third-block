@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kata.academy.kovtunenko.third.block.model.User;
 import ru.kata.academy.kovtunenko.third.block.service.UserService;
 
+import javax.annotation.security.PermitAll;
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/users/")
+@RequestMapping("")
 public class UserRestController {
     private final UserService userService;
 
@@ -25,19 +27,20 @@ public class UserRestController {
         this.userService = service;
     }
 
-    @GetMapping(value = "/get/{userId}", produces = "application/json; charset=UTF-8")
-    public User.Response getUserById(@PathVariable("userId") Long id) {
-        return userService.getById(id).new Response();
+    @GetMapping(value = "/api/current/user", produces = "application/json; charset=UTF-8")
+    public User.Response getUserById(Principal principal) {
+        User user = (User)userService.loadUserByUsername(principal.getName());
+        return user.new Response();
     }
 
-    @GetMapping(value = "/get", produces = "application/json; charset=UTF-8")
+    @GetMapping(value = "/api/users/get", produces = "application/json; charset=UTF-8")
     public List<User.Response> getUsers() {
         return userService.get().stream()
                 .map(x-> x.new Response())
                 .collect(Collectors.toList());
     }
 
-    @PatchMapping(value = "/update/{userId}")
+    @PatchMapping(value = "/api/users/update/{userId}")
     public ResponseEntity<?> updateUser(@PathVariable("userId") Long id, @RequestBody User user) {
         user.setId(id);
         userService.update(user);
@@ -45,14 +48,14 @@ public class UserRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/delete/{userId}")
+    @DeleteMapping(value = "/api/users/delete/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable("userId") Long id) {
         userService.deleteById(id);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping(value = "/add")
+    @PostMapping(value = "/api/users/add")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         userService.save(user);
 

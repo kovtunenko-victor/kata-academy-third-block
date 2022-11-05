@@ -24,7 +24,7 @@
                         About user
                     </div>
                     <div class="card-body">
-                        <table class="table table-striped" th:object="${user}">
+                        <table class="table table-striped">
                             <thead>
                             <tr>
                                 <th>Id</th>
@@ -34,14 +34,8 @@
                                 <th>Roles</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr>
-                                <td><label th:text="*{id}">id</label></td>
-                                <td><label th:text="*{login}">login</label></td>
-                                <td><label th:text="*{name}">name</label></td>
-                                <td><label th:text="*{title}">title</label></td>
-                                <td><label th:text="*{getRolesStr()}">roles</label></td>
-                            </tr>
+                            <tbody id = "tbodyShowOneUser">
+
                             </tbody>
                         </table>
                     </div>

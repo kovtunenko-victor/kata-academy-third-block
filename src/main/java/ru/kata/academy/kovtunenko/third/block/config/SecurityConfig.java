@@ -33,8 +33,8 @@ public class SecurityConfig implements WebMvcConfigurer {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests()
-                    .antMatchers("/admin/**", "/api/**").hasRole("ADMIN")
-                    .antMatchers("/login", "/error","/*.js").permitAll()
+                    .antMatchers("/admin/**", "/api/users/**").hasRole("ADMIN")
+                    .antMatchers("/login", "/error","/*.js", "/api/current/user").permitAll()
                     .anyRequest().hasAnyRole("USER","ADMIN")
                 .and()
                     .formLogin()

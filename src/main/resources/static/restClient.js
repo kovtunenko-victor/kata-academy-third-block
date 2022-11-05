@@ -15,6 +15,11 @@ async function getAllUsers() {
     return response.json();
 }
 
+async function getCurrentUser() {
+    let response = await fetch("http://localhost:8081/api/current/user");
+    return response.json();
+}
+
 async function loadRolesToAddForm() {
     $('#roles_add').empty();
 
