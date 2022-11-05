@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.kata.academy.kovtunenko.third.block.model.User;
 import ru.kata.academy.kovtunenko.third.block.service.UserService;
 
-import javax.annotation.security.PermitAll;
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
