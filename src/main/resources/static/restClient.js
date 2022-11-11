@@ -1,29 +1,29 @@
 async function getAllRoles() {
-    let response = await fetch("http://localhost:8081/api/roles/get");
+    let response = await fetch("https://localhost:8081/api/roles/get");
     return response.json();
 }
 
 async function getUserById(id) {
-    let response = await fetch("http://localhost:8081/api/users/get/" + id);
+    let response = await fetch("https://localhost:8081/api/users/get/" + id);
     return response.json().then(user => {
         return user;
     });
 }
 
 async function getAllUsers() {
-    let response = await fetch("http://localhost:8081/api/users/get");
+    let response = await fetch("https://localhost:8081/api/users/get");
     return response.json();
 }
 
 async function getCurrentUser() {
-    let response = await fetch("http://localhost:8081/api/current/user");
+    let response = await fetch("https://localhost:8081/api/current/user");
     return response.json();
 }
 
 async function loadRolesToAddForm() {
     $('#roles_add').empty();
 
-    await fetch("http://localhost:8081/api/roles/get")
+    await fetch("https://localhost:8081/api/roles/get")
         .then(res => res.json())
         .then(roleList => {
             roleList.forEach(role => {

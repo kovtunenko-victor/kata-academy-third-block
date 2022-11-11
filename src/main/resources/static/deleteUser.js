@@ -67,7 +67,7 @@ async function deleteUser() {
             return decodeURIComponent(xsrfCookies[0].split('=')[1]);
         }
 
-        fetch("http://localhost:8081/api/users/delete/" + form.id.value, {
+        fetch("https://localhost:8081/api/users/delete/" + form.id.value, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

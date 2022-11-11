@@ -77,7 +77,7 @@ async function updateUser() {
             return decodeURIComponent(xsrfCookies[0].split('=')[1]);
         }
 
-        fetch("http://localhost:8081/api/users/update/" + form.id.value, {
+        fetch("https://localhost:8081/api/users/update/" + form.id.value, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

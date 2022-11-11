@@ -32,7 +32,7 @@ async function addUser() {
             return decodeURIComponent(xsrfCookies[0].split('=')[1]);
         }
 
-        fetch("http://localhost:8081/api/users/add", {
+        fetch("https://localhost:8081/api/users/add", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
