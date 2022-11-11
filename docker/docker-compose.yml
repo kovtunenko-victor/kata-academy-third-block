@@ -1,0 +1,20 @@
+version: '3.3'
+services:
+  site-app:
+    build: ./
+    container_name: report-service
+    restart: always
+    environment:
+      SITE_DB_HOST: database
+    ports:
+      - 8081:8081
+    depends_on:
+      - db-config
+  database:
+    image: mysql:latest
+    container_name: site-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
