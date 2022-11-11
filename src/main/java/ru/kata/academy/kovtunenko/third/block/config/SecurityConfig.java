@@ -1,12 +1,12 @@
 package ru.kata.academy.kovtunenko.third.block.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -17,17 +17,17 @@ import ru.kata.academy.kovtunenko.third.block.service.UserService;
 import java.util.Set;
 
 @EnableWebSecurity
+@DependsOn("passwordEncoder")
 public class SecurityConfig implements WebMvcConfigurer {
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(UserService userService) {
+    public SecurityConfig(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -53,8 +53,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        userService.setPasswordEncoder(passwordEncoder());
-        authBuilder.userDetailsService(userService).passwordEncoder(passwordEncoder());
+        authBuilder.userDetailsService(userService).passwordEncoder(passwordEncoder);
         return authBuilder.build();
     }
 

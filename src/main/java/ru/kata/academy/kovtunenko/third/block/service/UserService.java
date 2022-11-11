@@ -11,5 +11,4 @@ public interface UserService extends UserDetailsService {
     void save(User user);
     void update(User user);
     void deleteById(Long id);
-    void setPasswordEncoder(PasswordEncoder passwordEncoder);
 }
